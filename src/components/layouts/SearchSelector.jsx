@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 
-import Icon from "./Icon";
+import Icon from "../utils/Icon";
 
-import useClickOutside from "../hooks/useClickOutside";
+import useClickOutside from "../../hooks/utils/useClickOutside";
 
 
-const SearchSelector = ({ className = "", options = [], placeholder = "Search...", index = null, onSelect = () => {} }) => {
+const SearchSelector = ({ className = "", options = [], placeholder = "Search…", index = null, onSelect = () => {} }) => {
 
   const [inputValue, setInputValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -18,7 +18,7 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search...
   const inputRef = useRef(null);  
 
 
-  const handleChange = (event) => {
+  const handleChange = event => {
 
     const value = event.target.value;
 
@@ -49,15 +49,17 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search...
   }
 
 
-  useClickOutside(dropdownRef, () => {
+  useClickOutside(dropdownRef.current, () => {
 
     setShowDropdown(false);
     inputRef.current?.blur();
-  });
+    
+  }, showDropdown);
 
 
   return (
     <div ref={dropdownRef} className={`relative w-64 ${className}`}>
+
       <div className="input-group flex justify-between items-center border rounded">
         <div className="icon-cont px-2">
           <Icon
@@ -79,6 +81,7 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search...
           {`${selectedItems.length}/${options.length}`}
         </span>
       </div>
+
       {showDropdown && filteredOptions.length > 0 && (
         <ul className="z-10 absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-md max-h-40 overflow-auto">
           {filteredOptions.map((option, index) => (
@@ -100,6 +103,7 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search...
           ))}
         </ul>
       )}
+
     </div>
   );
 }
