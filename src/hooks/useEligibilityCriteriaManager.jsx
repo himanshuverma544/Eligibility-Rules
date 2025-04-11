@@ -8,7 +8,6 @@ export default function useEligibilityCriteriaManager({
   eligibilityCriteriaData = null
 } = {}) {
 
-
   const [_, setEligibilityCriteriaRows] = states?.eligibilityCriteriaRowsState || [];
 
   const [__, setActiveRules] = states?.activeRulesState || [];
@@ -163,6 +162,8 @@ export default function useEligibilityCriteriaManager({
       selectOperatorHandler.update(requiredCurrentRuleRow?.selectedOperator?.value);
       
       const sortedRequiredMapArr = sortByPriority(requiredMap, eligibilityCriteriaData);
+
+      // console.log("At Rule Last: ", { requiredMap, currentIndex: index });
 
       return new Map(sortedRequiredMapArr);
     });
