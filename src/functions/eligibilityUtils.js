@@ -53,55 +53,6 @@ export function getDefaultOperator(currentRuleRow = null, mutualRuleRow = null) 
 }
 
 
-export function getMutualRuleUtilities(currentRuleRow = null, map = new Map()) {
-
-  const mutualIndex = currentRuleRow.operators?.index;
-  const mutualRuleRow = ![undefined, null].includes(mutualIndex) ? map.get(mutualIndex) : null;
-
-  return {
-    mutualIndex, 
-    mutualRuleRow
-  };
-} 
-
-
-export function addMutualIndexes(map, currentRuleRow, currentIndex, mutualRuleRow, mutualIndex) {
-
-  if (currentRuleRow.priority > mutualRuleRow.priority) {
-
-    currentRuleRow.operators.index = mutualIndex;
-    mutualRuleRow.operators.index = currentIndex;
-
-    map.set(currentIndex, currentRuleRow);
-    map.set(mutualIndex, mutualRuleRow);
-  }
-  else if (currentRuleRow.priority < mutualRuleRow.priority) {
-
-    currentRuleRow.operators.index = currentIndex;
-    mutualRuleRow.operators.index = mutualIndex;
-
-    map.set(currentIndex, mutualRuleRow);
-    map.set(mutualIndex, currentRuleRow);
-  }
-  else {
-    console.error("Invalid Priority.");
-  }
-}
-
-export function addMutualIndexInBothRows(map = new Map(), currentIndex = null, currentRuleRow = null) {
-
-  if (!currentRuleRow || currentIndex === null) return;
-  
-  for (let [index, rule] of map.entries()) {
-    
-    if (rule.selectedRule?.value === currentRuleRow?.operators?.mutuallyExclusiveWith) {
-      
-      addMutualIndexes(map, currentRuleRow, currentIndex, rule, index);
-      break;
-    } 
-  }
-}
-
 export function disableOptions(targetRow = null, conditionFn = () => false) {
 
   if (!targetRow?.operators?.options) return; 
@@ -111,6 +62,7 @@ export function disableOptions(targetRow = null, conditionFn = () => false) {
     disabled: conditionFn(option)
   }));
 }
+
 
 export function handleMutualExclusion(currentIndex = null, currentRuleRow = null, mutualIndex = null, mutualRuleRow = null, map = new Map()) {
 
@@ -141,14 +93,45 @@ export function handleMutualExclusion(currentIndex = null, currentRuleRow = null
       disableOptions(mutualRuleRow, disableComplementInMutualRuleRow);
     }
     
-    map.set(currentIndex, currentRuleRow);
     map.set(mutualIndex, mutualRuleRow);
   }
-  else {
-    map.set(currentIndex, currentRuleRow);
-  }
+  
+  map.set(currentIndex, currentRuleRow);
 }
 
+
+export function getMutualRuleUtilities(currentRuleRow = null, map = new Map()) {
+
+  const mutualIndex = currentRuleRow.operators?.index;
+  const mutualRuleRow = ![undefined, null].includes(mutualIndex) ? map.get(mutualIndex) : null;
+
+  return {
+    mutualIndex, 
+    mutualRuleRow
+  };
+} 
+
+
+export function addMutualIndexes(currentRuleRow, currentIndex, mutualRuleRow, mutualIndex) {
+
+  currentRuleRow.operators.index = mutualIndex;
+  mutualRuleRow.operators.index = currentIndex;
+}
+
+
+export function addMutualIndexInBothRows(map = new Map(), currentIndex = null, currentRuleRow = null) {
+  
+  if (!currentRuleRow || currentIndex === null) return;
+  
+  for (let [index, rule] of map.entries()) {
+    
+    if (rule.selectedRule?.value === currentRuleRow?.operators?.mutuallyExclusiveWith) {
+      
+      addMutualIndexes(currentRuleRow, currentIndex, rule, index);
+      break;
+    } 
+  }
+}
 
 
 export function applyMutuallyExclusiveRules(currentIndex = null, map = new Map(), currentRuleRow = null) {
