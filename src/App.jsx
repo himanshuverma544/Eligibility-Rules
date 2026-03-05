@@ -42,31 +42,45 @@ function App() {
 
 
   return (
-    <div className="app h-screen flex justify-center items-center ">
-      <div className="cont flex flex-col items-center gap-5">
-        <h1 className="heading mb-5 text-4xl text-center">
-          Eligibility Rules
-        </h1>
+    <div className="app h-screen flex justify-center items-center bg-gray-100">
+      <div className="cont w-[60rem] flex flex-col justify-center gap-5 p-20 rounded-lg bg-white">
+        <div className="text-cont w-full flex flex-col gap-2">
+          <h1 className="heading font-semibold">
+            Rule
+          </h1>
+          <h2 className="sub-heading text-sm font-medium">
+            The offer will be triggered based on the rules in this section.
+          </h2>
+        </div>
 
-        <div className="inner-cont">
-          {[...eligibilityCriteriaRows.entries()].map(([rowIndex, row], index) => {
-            return (
-              <EligibilityCriteriaRow
-                key={index}
-                index={rowIndex}
-                currentRow={row}
-                rulesOptions={rulesOptions}
-                activeRulesState={activeRulesState}
-                disabledRulesState={disabledRulesState}
-                selectOperatorHandler={selectOperatorHandler}
-                handlers={{
-                  rule: { handleOnRuleSelect },
-                  operator: { handleOnOperatorSelect, selectOperatorHandler }
-                }}
-                removeRow={removeEligibilityCriteriaRow}
-              />
-            );
-          })}
+        <hr className="divider w-full border-black/20"/>
+
+        <div className="inner-cont flex flex-col gap-3">
+          {eligibilityCriteriaRows.size > 0 &&
+            <h3 className="super-sub-heading text-sm font-medium">
+              Show offer if
+            </h3>
+          }
+          <div className="eligiblity-criteria-rows-cont flex flex-col gap-5">
+            {[...eligibilityCriteriaRows.entries()].map(([rowIndex, row], index) => {
+              return (
+                <EligibilityCriteriaRow
+                  key={index}
+                  index={rowIndex}
+                  currentRow={row}
+                  rulesOptions={rulesOptions}
+                  activeRulesState={activeRulesState}
+                  disabledRulesState={disabledRulesState}
+                  selectOperatorHandler={selectOperatorHandler}
+                  handlers={{
+                    rule: { handleOnRuleSelect },
+                    operator: { handleOnOperatorSelect, selectOperatorHandler }
+                  }}
+                  removeRow={removeEligibilityCriteriaRow}
+                />
+              );
+            })}
+          </div>
         </div>
 
         <button

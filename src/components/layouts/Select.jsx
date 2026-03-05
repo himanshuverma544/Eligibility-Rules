@@ -14,7 +14,8 @@ const Select = ({
   defaultOption = null,
   group = false,
   onSelect = () => {},
-  getSelectRefCurrent = () => {}
+  getSelectRefCurrent = () => {},
+  ...props
 }) => {
 
 
@@ -39,7 +40,7 @@ const Select = ({
 
 
   const handleOptionClick = option => {
-    if (option.disabled) return; // ✅ Prevent selecting disabled options
+    if (option.disabled) return;
 
     const selectedValue = option.value;
     let selectedGroup = "";
@@ -72,29 +73,33 @@ const Select = ({
 
   return (
     options.length > 0 && (
-      <div ref={parentNodeRef} className={`relative inline-block ${className}`}>
+      <div
+        ref={parentNodeRef}
+        className={`relative inline-block ${className}`}
+        {...props}
+      >
         {/* Selected Option as Readonly Input */}
         <div
-          className="relative w-full"
+          className="relative w-full cursor-pointer"
           onClick={() => setIsDropDownOpen(prev => !prev)}
         >
           <input
             type="text"
             readOnly
-            className={`w-full px-4 py-2 border rounded-md cursor-pointer bg-white ${innerClassName}`}
+            className={`w-full px-4 py-2 border focus:outline-none rounded-md cursor-pointer text-sm bg-white border-black/50 ${innerClassName}`}
             value={
               options.flatMap(grp => grp.items || [grp]).find((opt) => opt.value === selectedOption)?.label || defaultOption?.label || ""
             }
           />
           <Icon
             icon="/icons/up-down-arrow.svg"
-            className={`absolute size-[1rem] right-3 top-1/2 transform -translate-y-1/2 transition-transform ${isDropDownOpen ? "rotate-180" : ""}`}
+            className="absolute size-[1rem] right-3 top-1/2 transform -translate-y-1/2"
           />
         </div>
 
         {/* Dropdown Menu */}
         {isDropDownOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white z-10 border rounded-md mt-1 shadow-md">
+          <div className="absolute top-[95%] left-0 right-0 z-10 border rounded-md mt-1 text-sm shadow-md border-gray-300 bg-white">
             {group
               ? options.map((group, index) => (
                   <div key={index} className={`${optionsGroupClassName}`}>
