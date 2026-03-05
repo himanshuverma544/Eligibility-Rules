@@ -52,15 +52,6 @@ export function getDefaultOperator(currentRuleRow = null, mutualRuleRow = null) 
   return defaultOperator;
 }
 
-// TODOS ::
-// 1. Correct the mutual index in terms of priority, and later fix the same operators issues
-// 2. There's a issue of Active and Disable Rules
-// 3. Layouts should be as per selected rule, selected operators
-// 5. Search Showcase
-// 6. UI
-// 7. Refactoring for proper names
-// 8. CRUD with Rules
-
 
 export function addMutualIndexes(map, currentRuleRow, currentIndex, mutualRuleRow, mutualIndex) {
 
