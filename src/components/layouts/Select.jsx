@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
-import Icon from "./Icon";
+import Icon from "../utils/Icon";
 
-import useClickOutside from "../hooks/useClickOutside";
+import useClickOutside from "../../hooks/utils/useClickOutside";
 
 
 const Select = ({

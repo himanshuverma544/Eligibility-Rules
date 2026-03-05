@@ -1,66 +1,161 @@
-export const getNextAvailableRule = (rulesOptions, disabledRules) => {
+export function sortByPriority(eligibilityCriteriaMap = new Map(), eligibilityCriteriaData = null) {
 
-  for (const group of rulesOptions) {
-    for (const rule of group.items) {
-
-      if (!disabledRules.has(rule.value)) {
-        return { group, rule };
-      }
-    }
+  if (!eligibilityCriteriaData) {
+    return [...eligibilityCriteriaMap.entries()];
   }
-
-  return null;
-}
-
-
-export const addMutualIndex = (criteriaMap, ruleIndex, currentRule) => {
-
-  if (!currentRule.operators?.index) {
-
-    for (let [index, rule] of criteriaMap.entries()) {
-
-      if (rule.selectedRule?.value === currentRule?.operators?.mutuallyExclusiveWith) {
-
-        currentRule.operators.index = index;
-        rule.operators.index = ruleIndex;
-
-        criteriaMap.set(index, rule);
-        break;
-      }
-    }
-  }
-}
-
-
-export const applyMutuallyExclusiveRules = (ruleIndex, criteriaMap, currentRule) => {
-
-  currentRule = currentRule || criteriaMap.get(ruleIndex);
-  if (!currentRule) return criteriaMap;
-
-  addMutualIndex(criteriaMap, ruleIndex, currentRule);
-
-  const relatedRuleIndex = currentRule.operators?.index;
-  const relatedRule = relatedRuleIndex !== undefined ? criteriaMap.get(relatedRuleIndex) : null;
-
-  if (relatedRule) {
-
-    if (currentRule.selectedOperator.operatorType) {
-      relatedRule.operators.options = relatedRule.operators.options.map(option => ({
-        ...option,
-        disabled: option.operatorType === currentRule.selectedOperator.operatorType,
-      }));
-    }
-    else {
-      currentRule.operators.options = currentRule.operators.options.map(option => ({
-        ...option,
-        disabled: option.operatorType === relatedRule.selectedOperator.operatorType,
-      }));
+  
+  return [...eligibilityCriteriaMap.entries()].sort((a, b) => {
+    
+    const getSelectedRuleGroupPriority = currentRuleRow => {
       
-      relatedRule.operators.options = relatedRule.operators.options.map(option => ({ ...option, disabled: false }));
+      return eligibilityCriteriaData[currentRuleRow[1]?.selectedRule?.group]?.priority || 0;
     }
-    criteriaMap.set(relatedRuleIndex, relatedRule);
+    
+    const getSelectedRulePriority = currentRuleRow => {
+
+      return eligibilityCriteriaData[currentRuleRow[1]?.selectedRule?.group]?.rules[currentRuleRow[1]?.selectedRule.value]?.priority || 0;
+    }
+    
+    const groupPriorityA = getSelectedRuleGroupPriority(a);
+    const groupPriorityB = getSelectedRuleGroupPriority(b);
+
+    if (groupPriorityA !== groupPriorityB) {
+      return groupPriorityA - groupPriorityB;
+    }
+
+    const rulePriorityA = getSelectedRulePriority(a);
+    const rulePriorityB = getSelectedRulePriority(b);
+
+    return rulePriorityA - rulePriorityB;
+  });
+}
+
+
+export function getDefaultOperator(currentRuleRow = null, mutualRuleRow = null) {
+
+  if (!currentRuleRow) return null;
+    
+  let defaultOperator = currentRuleRow?.selectedOperator || currentRuleRow?.operators?.options[0];
+
+  if (mutualRuleRow) {
+    
+    let currentOperatorIndex = 0;
+    const mutualSelectedOperator = mutualRuleRow?.selectedOperator;
+
+    while(defaultOperator?.value === mutualSelectedOperator?.value) {
+      
+      const requiredIndex = currentOperatorIndex++ % currentRuleRow?.operators?.options?.length;
+      defaultOperator = currentRuleRow?.operators?.options[requiredIndex];
+    }
   }
 
-  criteriaMap.set(ruleIndex, currentRule);
-  return criteriaMap;
-};
+  return defaultOperator;
+}
+
+// TODOS ::
+// 1. Correct the mutual index in terms of priority, and later fix the same operators issues
+// 2. There's a issue of Active and Disable Rules
+// 3. Layouts should be as per selected rule, selected operators
+// 5. Search Showcase
+// 6. UI
+// 7. Refactoring for proper names
+// 8. CRUD with Rules
+
+
+export function addMutualIndexes(map, currentRuleRow, currentIndex, mutualRuleRow, mutualIndex) {
+
+  if (currentRuleRow.priority > mutualRuleRow.priority) {
+
+    currentRuleRow.operators.index = mutualIndex;
+    mutualRuleRow.operators.index = currentIndex;
+
+    map.set(currentIndex, currentRuleRow);
+    map.set(mutualIndex, mutualRuleRow);
+  }
+  else if (currentRuleRow.priority < mutualRuleRow.priority) {
+
+    currentRuleRow.operators.index = currentIndex;
+    mutualRuleRow.operators.index = mutualIndex;
+
+    map.set(currentIndex, mutualRuleRow);
+    map.set(mutualIndex, currentRuleRow);
+  }
+  else {
+    console.error("Invalid Priority.");
+  }
+}
+
+export function addMutualIndexInBothRows(map = new Map(), currentIndex = null, currentRuleRow = null) {
+
+  if (!currentRuleRow || currentIndex === null) return;
+  
+  for (let [index, rule] of map.entries()) {
+    
+    if (rule.selectedRule?.value === currentRuleRow?.operators?.mutuallyExclusiveWith) {
+      
+      addMutualIndexes(map, currentRuleRow, currentIndex, rule, index);
+      break;
+    } 
+  }
+}
+
+export function disableOptions(targetRow = null, conditionFn = () => false) {
+
+  if (!targetRow?.operators?.options) return; 
+
+  targetRow.operators.options = targetRow?.operators?.options.map(option => ({
+    ...option,
+    disabled: conditionFn(option)
+  }));
+}
+
+export function handleMutualExclusion(currentRuleRow = null, mutualRuleRow = null, map = new Map()) {
+
+  if (!mutualRuleRow) return;
+
+  const currentOperatorType = currentRuleRow?.selectedOperator?.operatorType;
+
+  const isOperatorTypeDefault = !currentOperatorType;
+
+  const mutualOperatorType = mutualRuleRow?.selectedOperator?.operatorType;
+  const mutualIndex = currentRuleRow.operators?.index;
+
+  if (isOperatorTypeDefault) {
+
+    const disableRelatedTypeInCurrentRuleRow = option =>
+      mutualOperatorType === option?.operatorType;
+    disableOptions(currentRuleRow, disableRelatedTypeInCurrentRuleRow);
+
+    const enableAllInMutualRuleRow = () => false;
+    disableOptions(mutualRuleRow, enableAllInMutualRuleRow);
+  }
+  else {
+    const disableComplementInCurrentRuleRow = option =>
+      mutualOperatorType === option?.operatorType;
+    disableOptions(currentRuleRow, disableComplementInCurrentRuleRow);
+
+    const disableComplementInMutualRuleRow = option =>
+      currentOperatorType === option?.operatorType;
+    disableOptions(mutualRuleRow, disableComplementInMutualRuleRow);
+  }
+
+  map.set(mutualIndex, mutualRuleRow);
+}
+
+export function applyMutuallyExclusiveRules(currentIndex = null, map = new Map(), currentRuleRow = null) {
+
+  if (!currentRuleRow) return map;
+
+  addMutualIndexInBothRows(map, currentIndex, currentRuleRow);
+
+  const mutualIndex = currentRuleRow.operators?.index;
+  const mutualRuleRow = ![undefined, null].includes(mutualIndex) ? map.get(mutualIndex) : null;
+
+  currentRuleRow.selectedOperator = getDefaultOperator(currentRuleRow, mutualRuleRow && mutualRuleRow);
+  
+  mutualRuleRow && handleMutualExclusion(currentRuleRow, mutualRuleRow, map);
+
+  map.set(currentIndex, currentRuleRow);
+
+  return map;
+}
