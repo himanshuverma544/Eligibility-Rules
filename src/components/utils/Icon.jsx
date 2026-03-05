@@ -51,7 +51,7 @@ const Icon = ({
   ...props
 }) => {
 
-  icon = content;
+  icon = icon ?? content;
 
   if (isReactElement(icon)) {
     return React.cloneElement(icon, { className, 'aria-label': alt, ...props });
