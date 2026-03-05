@@ -8,6 +8,8 @@ import componentsMap from "../mappings/componentsMap";
 
 import { getNextAvailableRule, getRuleLayout } from "../functions/rulesUtils";
 
+import useWindowSize from "../hooks/utils/useWindowSize";
+
 
 const EligibilityCriteriaRow = ({
   index = null,
@@ -19,7 +21,6 @@ const EligibilityCriteriaRow = ({
   handlers = {},
   removeRow = () => {}
 }) => {
-
   
   const [ activeRules ] = activeRulesState;
   const [ disabledRules ] = disabledRulesState;
@@ -40,13 +41,26 @@ const EligibilityCriteriaRow = ({
   const getSearchSelection = (selectedSearchItems = []) =>
     setSelectedSearchItems(selectedSearchItems);
 
+  
+  const { responsive } = useWindowSize();
+
 
   const getRequiredComponentProps = useCallback((index, componentObj) => {
 
     if (!currentRow) return {};
   
+    const width = responsive(
+      "100%",
+      {
+        sm: `${98 / Math.min(currentRuleRowLayout.length, 2)}%`,
+        lg: `${(95 / currentRuleRowLayout.length)}%`,
+        xl: `${(94 / currentRuleRowLayout.length)}%`,
+        xxl: `${(90 / currentRuleRowLayout.length)}%`
+      }
+    );
+
     switch (componentObj.component) {
-  
+      
       case "RuleSelector":
         return {
           options: rulesOptions.map(group => ({
@@ -57,9 +71,15 @@ const EligibilityCriteriaRow = ({
               disabled: activeRules.get(index) !== item.value && disabledRules.has(item.value)
             }))
           })),
-          defaultOption: currentRow?.selectedRule || getNextAvailableRule(rulesOptions, disabledRules)?.rule,
+          defaultOption:
+            currentRow?.selectedRule ||
+            getNextAvailableRule(rulesOptions, disabledRules)?.rule,
           group: true,
-          onSelect: selectedRule => handleOnRuleSelect(index, selectedRule)
+          onSelect: selectedRule =>
+            handleOnRuleSelect(
+              index, selectedRule, setSelectedSearchItems
+            ),
+          style: { width }
         };
   
         case "OperatorSelector":
@@ -70,69 +90,77 @@ const EligibilityCriteriaRow = ({
             })),
             defaultOption: currentRow?.operators?.options.find(option => option?.value === currentRow?.selectedOperator?.value),
             onSelect: selectedOperator => handleOnOperatorSelect(index, selectedOperator),
-            getSelectRefCurrent: selectRefCurrent => selectOperatorHandler.attach(index, selectRefCurrent)
+            getSelectRefCurrent: selectRefCurrent => selectOperatorHandler.attach(index, selectRefCurrent),
+            style: { width }
           };
         
         case "ItemsSearchSelector":
           return {
             options: currentRow.items,
             placeholder: componentObj?.props?.placeholder || "Search",
+            currentSelectedItems: selectedSearchItems,
             onSelect: selectedSearchItems => getSearchSelection(selectedSearchItems),
-            setHandleSelectedSearchItems
+            setHandleSelectedSearchItems,
+            style: { width }
           };
   
         case "TextInput":
           return {
             placeholder: componentObj?.props?.placeholder || "Enter Text",
+            style: { width, height: "2.375rem", padding: "0.5rem 1rem" }
           };
   
         case "NumberInput":
           return {
             placeholder: componentObj?.props?.placeholder || "Enter Number",
+            style: { width, height: "2.375rem", padding: "0.5rem 1rem" }
           };
   
       default:
         return {};
     }
-  }, [activeRules, disabledRules]);
-  
-  
+  }, [activeRules, disabledRules, currentRuleRowLayout, responsive]);
+
+
   return (
-    <div className="row-cont flex flex-col justify-center">
-      <div
-        key={index}
-        className={`row flex gap-x-5 ${className}`}
-      >
-        {currentRuleRowLayout.map((componentObj, innerIndex) => {
-          return (
-            <RequiredComponent
-              key={innerIndex}
-              componentName={componentObj.component}
-              componentsMap={componentsMap}
-              style={{ width: `${(100 / currentRuleRowLayout?.length) || 100}%` }}
-              {...getRequiredComponentProps(index, componentObj)}
-            />
-          )
-        })}
-
-        <button
-          className="row-remove-btn cursor-pointer"
-          onClick={() => removeRow(index)}
+    <div className="grid grid-cols-12">
+      <div className="row-cont flex flex-col justify-center col-span-11">
+        <div
+          key={index}
+          className={`row flex flex-wrap gap-x-[1vw] gap-y-[1vw] ${className}`}
         >
-          <Icon
-            className="cross-icon relative size-[0.5rem]"
-            innerClassName="absolute inset-0 size-full"
-            icon="/icons/cross.svg"
-            alt="cross-icon"
-          />
-        </button>
-      </div>
+          {currentRuleRowLayout.map((componentObj, innerIndex) => {
+            return (
+              <RequiredComponent
+                key={innerIndex}
+                componentName={componentObj.component}
+                componentsMap={componentsMap}
+                {...getRequiredComponentProps(index, componentObj)}
+              />
+            )
+          })}
+        </div>
 
-      <SearchSelectorFilter
-        selectedSearchItems={selectedSearchItems}
-        handleSelectedSearchItems={handleSelectedSearchItems}
-      />
+        <SearchSelectorFilter
+          className="w-full"
+          selectedSearchItems={selectedSearchItems}
+          handleSelectedSearchItems={handleSelectedSearchItems}
+        />
+      </div>
+      
+      <button
+        className="row-remove-btn col-span-1 flex justify-center mt-3"
+        onClick={() => removeRow(index)}
+      >
+        <Icon
+          className="cross-icon relative size-[0.5rem] cursor-pointer"
+          innerClassName="absolute inset-0 size-full"
+          icon="/icons/cross.svg"
+          alt="cross-icon"
+        />
+      </button> 
     </div>
+
   );
 }
 

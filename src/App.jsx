@@ -38,12 +38,19 @@ function App() {
     handleOnOperatorSelect,
     selectOperatorHandler
   }
-    = useEligibilityCriteriaManager({ states, rulesOptions, eligibilityCriteriaData });
+  = useEligibilityCriteriaManager({
+      states,
+      rulesOptions,
+      eligibilityCriteriaData
+  });
+
+
+  const isNextRuleAvailable = getNextAvailableRule(rulesOptions, disabledRules);
 
 
   return (
-    <div className="app h-screen flex justify-center items-center bg-gray-100">
-      <div className="cont w-[60rem] flex flex-col justify-center gap-5 p-20 rounded-lg bg-white">
+    <div className="app min-h-screen flex justify-center items-center bg-gray-100 p-[5vw]">
+      <div className="cont w-full flex flex-col justify-center gap-5 p-[5vw] rounded-lg bg-white lg:w-[60rem] lg:p-20">
         <div className="text-cont w-full flex flex-col gap-2">
           <h1 className="heading font-semibold">
             Rule
@@ -82,13 +89,16 @@ function App() {
           </div>
         </div>
 
-        <button
-          className="and-btn flex justify-center px-4 py-1 rounded-md bg-gray-400"
-          onClick={addEligibilityCriteriaRow}
-          disabled={!getNextAvailableRule(rulesOptions, disabledRules)}
-        >
-          + AND
-        </button>
+        <div className="btn-cont flex justify-center items-center">
+          <button
+            className="add-btn px-4 py-1 rounded-md shadow-[1px_1px_0_0_#E3E3E3] text-sm font-medium"
+            onClick={addEligibilityCriteriaRow}
+            disabled={!isNextRuleAvailable}
+            style={{ opacity: !isNextRuleAvailable ? 0.5 : 1 }}
+          >
+            + ADD
+          </button>
+        </div>
       </div>
     </div>
   );
