@@ -1,6 +1,9 @@
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 
+import SearchSelectorFilter from "./SearchSelectorFilter";
 import RequiredComponent from "./utils/RequiredComponent";
+import Icon from "./utils/Icon";
+
 import componentsMap from "../mappings/componentsMap";
 
 import { getNextAvailableRule, getRuleLayout } from "../functions/rulesUtils";
@@ -17,15 +20,25 @@ const EligibilityCriteriaRow = ({
   removeRow = () => {}
 }) => {
 
+  
   const [ activeRules ] = activeRulesState;
   const [ disabledRules ] = disabledRulesState;
-
 
   const { 
     rule: { handleOnRuleSelect },
     operator: { handleOnOperatorSelect, selectOperatorHandler }
   }
   = handlers;
+
+  const currentRuleRowLayout = getRuleLayout(currentRow);
+
+
+  const [selectedSearchItems, setSelectedSearchItems] = useState([]);
+  const [handleSelectedSearchItems, setHandleSelectedSearchItems] = useState(null);
+
+
+  const getSearchSelection = (selectedSearchItems = []) =>
+    setSelectedSearchItems(selectedSearchItems);
 
 
   const getRequiredComponentProps = useCallback((index, componentName) => {
@@ -64,6 +77,8 @@ const EligibilityCriteriaRow = ({
           return {
             options: currentRow.items,
             placeholder: "Search",
+            onSelect: selectedSearchItems => getSearchSelection(selectedSearchItems),
+            setHandleSelectedSearchItems
           };
   
         case "TextInput":
@@ -83,27 +98,40 @@ const EligibilityCriteriaRow = ({
   
   
   return (
-    <div
-      key={index}
-      className={`flex space-x-5 space-y-5 ${className}`}
-    >
-      {getRuleLayout(currentRow).map((componentName, innerIndex) => {
-        return (
-          <RequiredComponent
-            key={innerIndex}
-            componentName={componentName}
-            componentsMap={componentsMap}
-            {...getRequiredComponentProps(index, componentName)}
-          />
-        )
-      })}
-
-      <button
-        className="row-remove-btn mb-5"
-        onClick={() => removeRow(index)}
+    <div className="row-cont flex flex-col justify-center">
+      <div
+        key={index}
+        className={`row flex gap-x-5 ${className}`}
       >
-        ✖
-      </button>
+        {currentRuleRowLayout.map((componentName, innerIndex) => {
+          return (
+            <RequiredComponent
+              key={innerIndex}
+              componentName={componentName}
+              componentsMap={componentsMap}
+              style={{ width: `${(100 / currentRuleRowLayout?.length) || 100}%` }}
+              {...getRequiredComponentProps(index, componentName)}
+            />
+          )
+        })}
+
+        <button
+          className="row-remove-btn"
+          onClick={() => removeRow(index)}
+        >
+          <Icon
+            className="cross-icon relative size-[0.5rem]"
+            innerClassName="absolute inset-0 size-full"
+            icon="/icons/cross.svg"
+            alt="cross-icon"
+          />
+        </button>
+      </div>
+
+      <SearchSelectorFilter
+        selectedSearchItems={selectedSearchItems}
+        handleSelectedSearchItems={handleSelectedSearchItems}
+      />
     </div>
   );
 }

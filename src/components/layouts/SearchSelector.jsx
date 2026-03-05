@@ -1,11 +1,17 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import Icon from "../utils/Icon";
 
 import useClickOutside from "../../hooks/utils/useClickOutside";
 
 
-const SearchSelector = ({ className = "", options = [], placeholder = "Search…", index = null, onSelect = () => {} }) => {
+const SearchSelector = ({
+  className = "",
+  options = [],
+  placeholder = "Search…",
+  onSelect = null,
+  setHandleSelectedSearchItems = null
+}) => {
 
   const [inputValue, setInputValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -38,15 +44,23 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search…
   }
 
 
-  const handleSelectedItems = (option) => {
+  const handleSelectedItems = (option = null) => {
 
     let currentSelectedItems = selectedItems.includes(option)
       ? selectedItems.filter(item => item !== option)
       : [...selectedItems, option];
 
     setSelectedItems(currentSelectedItems);
-    onSelect({ index, currentSelectedItems });
+    onSelect(currentSelectedItems);
   }
+
+
+  useEffect(() => {
+
+    if (setHandleSelectedSearchItems) {
+      setHandleSelectedSearchItems(() => handleSelectedItems);
+    }
+  }, [selectedItems]);
 
 
   useClickOutside(dropdownRef.current, () => {
@@ -59,11 +73,10 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search…
 
   return (
     <div ref={dropdownRef} className={`relative w-64 ${className}`}>
-
-      <div className="input-group flex justify-between items-center border rounded">
-        <div className="icon-cont px-2">
+      <div className="input-group flex justify-between items-center rounded border-1 border-black/50 ">
+        <div className="icon-cont px-3">
           <Icon
-            className="icon size-[1.2rem] relative"
+            className="icon size-[13px] relative"
             innerClassName="size-full absolute inset-0"
             icon="/icons/search.svg"
           />
@@ -71,30 +84,30 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search…
         <input
           ref={inputRef}
           type="text"
-          className="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+          className="w-full px-1 py-2 rounded-md focus:outline-none text-sm"
           placeholder={placeholder}
           value={inputValue}
           onChange={handleChange}
           onFocus={handleFocus}
         />
-        <span className="selection-count px-2">
+        <span className="selection-count px-3 text-sm text-black/50">
           {`${selectedItems.length}/${options.length}`}
         </span>
       </div>
 
       {showDropdown && filteredOptions.length > 0 && (
-        <ul className="z-10 absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-md max-h-40 overflow-auto">
+        <ul className="absolute top-[95%] left-0 right-0 max-h-40 z-10 mt-1 rounded-md border text-sm bg-white border-gray-300 shadow-md overflow-auto">
           {filteredOptions.map((option, index) => (
             <li
               key={index}
-              className="space-x-5 px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white"
-              onClick={() => handleSelectedItems(option)}
+              className="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-200"
+              onClick={() => handleSelectedItems(option, "change")}
             >
-              <input 
+              <input
                 type="checkbox"
+                className="w-4 h-4 cursor-pointer accent-black"
                 checked={selectedItems.includes(option)}
                 onChange={() => handleSelectedItems(option)}
-                className="w-4 h-4 cursor-pointer"
               />
               <span className="option">
                 {option}
@@ -103,7 +116,6 @@ const SearchSelector = ({ className = "", options = [], placeholder = "Search…
           ))}
         </ul>
       )}
-
     </div>
   );
 }
