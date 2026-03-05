@@ -10,7 +10,8 @@ const SearchSelector = ({
   options = [],
   placeholder = "Search…",
   onSelect = null,
-  setHandleSelectedSearchItems = null
+  setHandleSelectedSearchItems = null,
+  ...props
 }) => {
 
   const [inputValue, setInputValue] = useState("");
@@ -72,7 +73,11 @@ const SearchSelector = ({
 
 
   return (
-    <div ref={dropdownRef} className={`relative w-64 ${className}`}>
+    <div
+      ref={dropdownRef}
+      className={`relative ${className}`}
+      {...props}
+    >
       <div className="input-group flex justify-between items-center rounded border-1 border-black/50 ">
         <div className="icon-cont ps-3 pe-2">
           <Icon
