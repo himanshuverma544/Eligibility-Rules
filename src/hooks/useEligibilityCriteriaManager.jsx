@@ -159,7 +159,7 @@ export default function useEligibilityCriteriaManager({
   })();
   
 
-  const handleOnRuleSelect = (index, selectedRule) => {
+  const handleOnRuleSelect = (index, selectedRule, setSelectedSearchItems) => {
     
     setEligibilityCriteriaRows(prev => {
       
@@ -193,6 +193,7 @@ export default function useEligibilityCriteriaManager({
       const requiredCurrentRuleRow = requiredMap.get(index);
       
       selectOperatorHandler.update(index, requiredCurrentRuleRow?.selectedOperator?.value);
+      setSelectedSearchItems([]);
       
       const sortedRequiredMapArr = sortByPriority(requiredMap, eligibilityCriteriaData);
 

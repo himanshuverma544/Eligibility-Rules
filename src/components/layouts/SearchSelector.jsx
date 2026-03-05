@@ -9,6 +9,7 @@ const SearchSelector = ({
   className = "",
   options = [],
   placeholder = "Search…",
+  currentSelectedItems = [],
   onSelect = null,
   setHandleSelectedSearchItems = null,
   ...props
@@ -58,10 +59,25 @@ const SearchSelector = ({
 
   useEffect(() => {
 
-    if (setHandleSelectedSearchItems) {
-      setHandleSelectedSearchItems(() => handleSelectedItems);
+    const sendToParent = () => {
+
+      if (setHandleSelectedSearchItems) {
+        setHandleSelectedSearchItems(() => handleSelectedItems);
+      }
     }
+
+    sendToParent();
+
   }, [selectedItems]);
+
+
+  useEffect(() => {
+
+    if (currentSelectedItems.length <= 0) {
+      setSelectedItems([]);
+    }
+
+  }, [currentSelectedItems]);
 
 
   useClickOutside(dropdownRef.current, () => {
