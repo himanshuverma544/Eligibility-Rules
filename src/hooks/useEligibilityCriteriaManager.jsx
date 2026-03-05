@@ -1,5 +1,15 @@
-import { sortByPriority, applyMutuallyExclusiveRules } from "../functions/eligibilityUtils";
-import { getNextAvailableRule, getInitialRuleValues } from "../functions/rulesUtils";
+import {
+  sortByPriority,
+  applyMutuallyExclusiveRules
+}
+from "../functions/eligibilityUtils";
+
+import {
+  getNextAvailableRule,
+  getInitialRuleValues,
+}
+from "../functions/rulesUtils";
+
 
 
 export default function useEligibilityCriteriaManager({
@@ -145,10 +155,10 @@ export default function useEligibilityCriteriaManager({
 
       const currentRuleRow = {
         ...prevRuleRow,
-        operators: currentSelectedRule.operators,
-        items: currentSelectedRule.items,
-        layout: currentSelectedRule.layout,
-        priority: currentSelectedRule.priority,
+        operators: currentSelectedRule?.operators,
+        items: currentSelectedRule?.items,
+        layout: currentSelectedRule?.layout || null,
+        priority: currentSelectedRule?.priority,
         selectedRule: { ...selectedRule, active: true },
         selectedOperator: currentSelectedRule?.operators?.options[0]
       };
@@ -162,8 +172,6 @@ export default function useEligibilityCriteriaManager({
       selectOperatorHandler.update(requiredCurrentRuleRow?.selectedOperator?.value);
       
       const sortedRequiredMapArr = sortByPriority(requiredMap, eligibilityCriteriaData);
-
-      // console.log("At Rule Last: ", { requiredMap, currentIndex: index });
 
       return new Map(sortedRequiredMapArr);
     });
@@ -184,7 +192,7 @@ export default function useEligibilityCriteriaManager({
       rows.set(index, currentRuleRow);
 
       const requiredRows = applyMutuallyExclusiveRules(index, rows, currentRuleRow);
-  
+
       return new Map(requiredRows);
     });
   }

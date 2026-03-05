@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import RequiredComponent from "./utils/RequiredComponent";
 import componentsMap from "../mappings/componentsMap";
 
-import { getNextAvailableRule } from "../functions/rulesUtils";
+import { getNextAvailableRule, getRuleLayout } from "../functions/rulesUtils";
 
 
 const EligibilityCriteriaRow = ({
@@ -16,7 +16,6 @@ const EligibilityCriteriaRow = ({
   handlers = {},
   removeRow = () => {}
 }) => {
-
 
   const [ activeRules ] = activeRulesState;
   const [ disabledRules ] = disabledRulesState;
@@ -88,7 +87,7 @@ const EligibilityCriteriaRow = ({
       key={index}
       className={`flex space-x-5 space-y-5 ${className}`}
     >
-      {currentRow.layout.map((componentName, innerIndex) => {
+      {getRuleLayout(currentRow).map((componentName, innerIndex) => {
         return (
           <RequiredComponent
             key={innerIndex}

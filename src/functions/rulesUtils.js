@@ -1,3 +1,21 @@
+export function getRuleLayout(rule = null) {
+
+  if (!rule) {
+    return [];
+  }
+
+  if (rule?.layout) {
+    return rule?.layout;
+  }
+
+  if (rule?.selectedOperator?.layout) {
+    return rule?.selectedOperator?.layout;
+  }
+
+  return [];
+}
+
+
 /* Gives the rules along with their group in an array for the RuleSelector Component */
 
 export function getRuleOptionsArray(eligibilityCriteriaData = null) {
@@ -45,7 +63,7 @@ export function getInitialRuleValues (nextRule = null, eligibilityCriteriaData =
     selectedOperator: {...ruleItemValue?.operators?.options[0], index: 0},
     operators: ruleItemValue?.operators || null,
     items: ruleItemValue?.items || null,
-    layout: ruleItemValue?.layout,
+    layout: ruleItemValue?.layout || null,
     priority: ruleItemValue?.priority
   };
 }

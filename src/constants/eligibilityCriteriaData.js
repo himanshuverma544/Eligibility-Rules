@@ -12,20 +12,21 @@ const eligibilityCriteriaData = {
               label: "contains any",
               value: "contains-any",
               operatorType: "inclusion",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
             },
             {
               label: "is not",
               value: "is-not",
               operatorType: "exclusion",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
             }
           ],
           mutuallyExclusiveWith: "specific-product"
         },
         items: ["Archived", "Accessory", "Premium", "Snow", "Snowboard", "Sport", "Winter"],
         priority: 1.1,
-        layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
         active: false
       },
       "product-tags": {
@@ -35,18 +36,19 @@ const eligibilityCriteriaData = {
             {
               label: "contains any",
               value: "contains-any",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"]
             },
             {
               label: "is not",
               value: "is-not",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"]
             }
           ]
         },
         items: ["Black", "Blue"],
         priority: 1.2,
-        layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
         active: false
       },
       "specific-product": {
@@ -57,26 +59,28 @@ const eligibilityCriteriaData = {
               label: "equals anything",
               value: "equals-anything",
               operatorType: null,
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
             },
             {
               label: "contains any",
               value: "contains-any",
               operatorType: "inclusion",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
             },
             {
               label: "is not",
               value: "is-not",
               operatorType: "exclusion",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
             }
           ],
           mutuallyExclusiveWith: "specific-collection"
         },
         items: ["Shoes", "Headphone", "Watch", "Laptop"],
         priority: 1.3,
-        layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
         active: false
       },
       "product-subscribed": {
@@ -86,17 +90,18 @@ const eligibilityCriteriaData = {
             {
               label: "yes",
               value: "yes",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector"]
             },
             {
               label: "no",
               value: "no",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector"]
             }
           ]
         },
         priority: 1.4,
-        layout: ["RuleSelector", "OperatorSelector"],
         active: false
       }
     }
@@ -122,23 +127,25 @@ const eligibilityCriteriaData = {
             {
               label: "is equal or greater",
               value: "is-equal-or-greater",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "NumberInput"]
             },
             {
               label: "is between",
               value: "is-between",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "NumberInput", "NumberInput"]
             },
             {
               label: "is less than",
               value: "is-less-than",
-              active: false
+              active: false,
+              layout: ["RuleSelector", "OperatorSelector", "NumberInput"]
             }
           ]
         },
         currencies: ["All Currencies", "USD", "INR"],
         priority: 3.1,
-        layout: ["RuleSelector", "OperatorSelector", "NumberInput", "NumberInput"],
         active: false
       }
     }
