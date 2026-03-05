@@ -2,9 +2,9 @@ import "./App.css";
 
 import { useState, useMemo } from "react";
 
-import EligibilityCriteriaRow from "./components/EligibilityCriteriaRow.jsx"
+import EligibilityCriteriaRow from "./components/EligibilityCriteriaRow.jsx";
 
-import useEligibilityCriteriaManager from "./hooks/useEligibilityCriteriaManager.jsx"
+import useEligibilityCriteriaManager from "./hooks/useEligibilityCriteriaManager.jsx";
 
 import { getRuleOptionsArray, getNextAvailableRule } from "./functions/rulesUtils.js";
 
