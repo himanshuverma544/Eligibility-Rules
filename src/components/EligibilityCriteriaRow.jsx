@@ -54,7 +54,7 @@ const EligibilityCriteriaRow = ({
             items: group.items.map(item => ({
               ...item,
               active: activeRules.get(index) === item.value,
-              disabled: item.value !== activeRules.get(index) && disabledRules.has(item.value)
+              disabled: activeRules.get(index) !== item.value && disabledRules.has(item.value)
             }))
           })),
           defaultOption: currentRow?.selectedRule || getNextAvailableRule(rulesOptions, disabledRules)?.rule,

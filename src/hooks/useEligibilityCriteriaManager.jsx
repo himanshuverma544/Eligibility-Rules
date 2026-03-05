@@ -28,11 +28,29 @@ export default function useEligibilityCriteriaManager({
 
     if (!requiredRule) return;
 
-    const addActiveRule = (activeMap, requiredRule) => activeMap.set(activeMap.size, requiredRule.value);
-    const removeActiveRule = (activeMap, requiredRule) => activeMap.delete(requiredRule.index);
+    const addActiveRule = (activeMap, requiredRule) =>
+      activeMap.set(activeMap.size, requiredRule.value);
 
-    const addDisabledRule = (disabledSet, requiredRule) => disabledSet.add(requiredRule.value);
-    const removeDisabledRule = (disabledSet, requiredRule) => { if (requiredRule) disabledSet.delete(requiredRule.value); }
+    const removeActiveRule = (activeMap, requiredRule) =>
+      activeMap.delete(requiredRule.index);
+
+    const updateActiveRule = (activeMap, requiredRule) => { 
+      activeMap.delete(requiredRule.index);
+      activeMap.set(requiredRule.index, requiredRule.new.value);
+    }
+
+
+    const addDisabledRule = (disabledSet, requiredRule) =>
+      disabledSet.add(requiredRule.value);
+
+    const removeDisabledRule = (disabledSet, requiredRule) => 
+      disabledSet.delete(requiredRule.value);
+
+    const updateDisabledRule = (disabledSet, requiredRule) => { 
+      disabledSet.delete(requiredRule.prev.value);
+      disabledSet.add(requiredRule.new.value);
+    }
+
 
     setActiveRules(prevActive => {
 
@@ -49,11 +67,13 @@ export default function useEligibilityCriteriaManager({
           break;
 
         case "update":
-          addActiveRule(newActive, requiredRule?.new || requiredRule);
+          updateActiveRule(newActive, requiredRule);
+          break;
       }
 
       return newActive;
     });
+
 
     setDisabledRules(prevDisabled => {
 
@@ -70,8 +90,8 @@ export default function useEligibilityCriteriaManager({
           break;
 
         case "update":
-          removeDisabledRule(newDisabled, requiredRule?.prev);
-          addDisabledRule(newDisabled, requiredRule?.new);
+          updateDisabledRule(newDisabled, requiredRule);
+          break;
       }
 
       return newDisabled;
@@ -138,19 +158,19 @@ export default function useEligibilityCriteriaManager({
     };
   })();
   
+
   const handleOnRuleSelect = (index, selectedRule) => {
     
     setEligibilityCriteriaRows(prev => {
       
       const newMap = new Map(prev);
-      
       const prevRuleRow = newMap.get(index);
   
       const requiredRule = {
         index,
         prev: { value: prevRuleRow?.selectedRule?.value },
         new: { value: selectedRule?.value }
-      }
+      };
 
       manageRulesBehaviour(requiredRule, "update");
       
