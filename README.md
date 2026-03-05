@@ -1,3 +1,6 @@
+# Preview
+<img src="public/preview.jpg" width="800" height="600"/>
+
 # Tech Stack
 - Framework/Library: React JS
 - UI Library: Tailwind CSS
