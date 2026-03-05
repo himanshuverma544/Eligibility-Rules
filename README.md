@@ -1,6 +1,9 @@
 # Preview
 <img src="public/preview.jpg" width="800" height="600"/>
 
+# About
+- The Eligibility Rules feature lets e-commerce store owners set custom criteria for offers, ensuring only eligible customers or products qualify.
+
 # Tech Stack
 - Framework/Library: React JS
 - UI Library: Tailwind CSS
