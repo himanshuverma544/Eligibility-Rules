@@ -13,14 +13,40 @@ const eligibilityCriteriaData = {
               value: "contains-any",
               operatorType: "inclusion",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
+              layout: [
+                {
+                  component: "RuleSelector",
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Collections"
+                  }
+                }
+              ],
             },
             {
               label: "is not",
               value: "is-not",
               operatorType: "exclusion",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
+              layout: [
+                {
+                  component: "RuleSelector",
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Collections"
+                  }
+                }
+              ],
             }
           ],
           mutuallyExclusiveWith: "specific-product"
@@ -37,13 +63,39 @@ const eligibilityCriteriaData = {
               label: "contains any",
               value: "contains-any",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"]
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Product Tags"
+                  }
+                }
+              ]
             },
             {
               label: "is not",
               value: "is-not",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"]
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Product Tags"
+                  }
+                }
+              ]
             }
           ]
         },
@@ -60,21 +112,60 @@ const eligibilityCriteriaData = {
               value: "equals-anything",
               operatorType: null,
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Specific Product"
+                  }
+                }
+              ],
             },
             {
               label: "contains any",
               value: "contains-any",
               operatorType: "inclusion",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Specific Product"
+                  }
+                }
+              ],
             },
             {
               label: "is not",
               value: "is-not",
               operatorType: "exclusion",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "ItemsSearchSelector"],
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "ItemsSearchSelector",
+                  props: {
+                    placeholder: "Search Specific Product"
+                  }
+                }
+              ],
             }
           ],
           mutuallyExclusiveWith: "specific-collection"
@@ -91,13 +182,27 @@ const eligibilityCriteriaData = {
               label: "yes",
               value: "yes",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector"]
+              layout: [
+                {
+                  component: "RuleSelector",
+                },
+                {
+                  component: "OperatorSelector"
+                }
+              ]
             },
             {
               label: "no",
               value: "no",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector"]
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                }
+              ]
             }
           ]
         },
@@ -112,7 +217,17 @@ const eligibilityCriteriaData = {
       "specific-discount-codes": {
         label: "Specific Discount Codes",
         priority: 2.1,
-        layout: ["RuleSelector", "TextInput"],
+        layout: [
+          {
+            component: "RuleSelector"
+          },
+          {
+            component: "TextInput",
+            props: {
+              placeholder: "Enter Specific Discount Codes"
+            }
+          }
+        ],
         active: false
       }
     }
@@ -128,19 +243,64 @@ const eligibilityCriteriaData = {
               label: "is equal or greater",
               value: "is-equal-or-greater",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "NumberInput"]
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "NumberInput",
+                  props: {
+                    placeholder: "Enter Amount"
+                  }
+                }
+              ]
             },
             {
               label: "is between",
               value: "is-between",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "NumberInput", "NumberInput"]
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "NumberInput",
+                  props: {
+                    placeholder: "Enter Min. Amount"
+                  }
+                },
+                {
+                  component: "NumberInput",
+                  props: {
+                    placeholder: "Enter Max. Amount"
+                  }
+                }
+              ]
             },
             {
               label: "is less than",
               value: "is-less-than",
               active: false,
-              layout: ["RuleSelector", "OperatorSelector", "NumberInput"]
+              layout: [
+                {
+                  component: "RuleSelector"
+                },
+                {
+                  component: "OperatorSelector"
+                },
+                {
+                  component: "NumberInput",
+                  props: {
+                    placeholder: "Enter Amount"
+                  }
+                }
+              ]
             }
           ]
         },

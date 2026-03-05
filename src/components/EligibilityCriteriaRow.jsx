@@ -41,11 +41,11 @@ const EligibilityCriteriaRow = ({
     setSelectedSearchItems(selectedSearchItems);
 
 
-  const getRequiredComponentProps = useCallback((index, componentName) => {
+  const getRequiredComponentProps = useCallback((index, componentObj) => {
 
     if (!currentRow) return {};
   
-    switch (componentName) {
+    switch (componentObj.component) {
   
       case "RuleSelector":
         return {
@@ -76,19 +76,19 @@ const EligibilityCriteriaRow = ({
         case "ItemsSearchSelector":
           return {
             options: currentRow.items,
-            placeholder: "Search",
+            placeholder: componentObj?.props?.placeholder || "Search",
             onSelect: selectedSearchItems => getSearchSelection(selectedSearchItems),
             setHandleSelectedSearchItems
           };
   
         case "TextInput":
           return {
-            placeholder: "Enter Text",
+            placeholder: componentObj?.props?.placeholder || "Enter Text",
           };
   
         case "NumberInput":
           return {
-            placeholder: "Enter Number",
+            placeholder: componentObj?.props?.placeholder || "Enter Number",
           };
   
       default:
@@ -103,14 +103,14 @@ const EligibilityCriteriaRow = ({
         key={index}
         className={`row flex gap-x-5 ${className}`}
       >
-        {currentRuleRowLayout.map((componentName, innerIndex) => {
+        {currentRuleRowLayout.map((componentObj, innerIndex) => {
           return (
             <RequiredComponent
               key={innerIndex}
-              componentName={componentName}
+              componentName={componentObj.component}
               componentsMap={componentsMap}
               style={{ width: `${(100 / currentRuleRowLayout?.length) || 100}%` }}
-              {...getRequiredComponentProps(index, componentName)}
+              {...getRequiredComponentProps(index, componentObj)}
             />
           )
         })}
