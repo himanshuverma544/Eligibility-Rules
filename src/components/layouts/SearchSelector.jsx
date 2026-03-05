@@ -74,7 +74,7 @@ const SearchSelector = ({
   return (
     <div ref={dropdownRef} className={`relative w-64 ${className}`}>
       <div className="input-group flex justify-between items-center rounded border-1 border-black/50 ">
-        <div className="icon-cont px-3">
+        <div className="icon-cont ps-3 pe-2">
           <Icon
             className="icon size-[13px] relative"
             innerClassName="size-full absolute inset-0"
@@ -84,13 +84,13 @@ const SearchSelector = ({
         <input
           ref={inputRef}
           type="text"
-          className="w-full px-1 py-2 rounded-md focus:outline-none text-sm"
+          className="w-full py-2 rounded-md focus:outline-none text-sm"
           placeholder={placeholder}
           value={inputValue}
           onChange={handleChange}
           onFocus={handleFocus}
         />
-        <span className="selection-count px-3 text-sm text-black/50">
+        <span className="selection-count ps-2 pe-3 text-sm text-black/50">
           {`${selectedItems.length}/${options.length}`}
         </span>
       </div>
