@@ -25,7 +25,7 @@ const Select = ({
   const parentNodeRef = useRef(null);
   const selectRef = useRef({ setState: setSelectedOption });
 
-  
+
   useEffect(() => {
 
     const sendToParent = () => {

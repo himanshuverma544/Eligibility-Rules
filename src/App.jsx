@@ -71,7 +71,6 @@ function App() {
                   rulesOptions={rulesOptions}
                   activeRulesState={activeRulesState}
                   disabledRulesState={disabledRulesState}
-                  selectOperatorHandler={selectOperatorHandler}
                   handlers={{
                     rule: { handleOnRuleSelect },
                     operator: { handleOnOperatorSelect, selectOperatorHandler }

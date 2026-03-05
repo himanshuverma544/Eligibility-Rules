@@ -103,6 +103,8 @@ export default function useEligibilityCriteriaManager({
   
   const removeEligibilityCriteriaRow = index => {
 
+    selectOperatorHandler.remove(index);
+
     setEligibilityCriteriaRows(prev => {
 
       const newMap = new Map(prev);
@@ -122,16 +124,17 @@ export default function useEligibilityCriteriaManager({
 
   const selectOperatorHandler = (() => {
 
-    let selectRefCurrent = null;
+    let selectRefsCurrent = new Map();
   
     return {
-      selectRefCurrent: refCurrent => selectRefCurrent = refCurrent,
-      update: selectedOptionValue => {
-        
+      attach: (index, refCurrent) => selectRefsCurrent.set(index, refCurrent),
+      update: (index, selectedOptionValue) => {
+        const selectRefCurrent = selectRefsCurrent.get(index);
         if (selectRefCurrent) {
           selectRefCurrent.setState(selectedOptionValue);
         }
-      }
+      },
+      remove: index => selectRefsCurrent.delete(index)
     };
   })();
   
@@ -169,7 +172,7 @@ export default function useEligibilityCriteriaManager({
 
       const requiredCurrentRuleRow = requiredMap.get(index);
       
-      selectOperatorHandler.update(requiredCurrentRuleRow?.selectedOperator?.value);
+      selectOperatorHandler.update(index, requiredCurrentRuleRow?.selectedOperator?.value);
       
       const sortedRequiredMapArr = sortByPriority(requiredMap, eligibilityCriteriaData);
 

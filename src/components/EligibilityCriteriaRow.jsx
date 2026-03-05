@@ -70,7 +70,7 @@ const EligibilityCriteriaRow = ({
             })),
             defaultOption: currentRow?.operators?.options.find(option => option?.value === currentRow?.selectedOperator?.value),
             onSelect: selectedOperator => handleOnOperatorSelect(index, selectedOperator),
-            getSelectRefCurrent: selectOperatorHandler.selectRefCurrent
+            getSelectRefCurrent: selectRefCurrent => selectOperatorHandler.attach(index, selectRefCurrent)
           };
         
         case "ItemsSearchSelector":
@@ -116,7 +116,7 @@ const EligibilityCriteriaRow = ({
         })}
 
         <button
-          className="row-remove-btn"
+          className="row-remove-btn cursor-pointer"
           onClick={() => removeRow(index)}
         >
           <Icon
